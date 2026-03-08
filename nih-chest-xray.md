@@ -122,9 +122,7 @@ A co-occurrence matrix reveals interesting patterns:
 ### 4.1 Data Preprocessing
 
 #### Train-Test Split
-- **Split ratio**: 80% train, 20% test
-- **Strategy**: Patient-level split to prevent data leakage
-- Ensures no patient appears in both train and test sets
+- Use `train_val_list.txt` and `test_list.txt` to construct the training/validation and test datasets with an approximate 80/20 split, ensuring that the class distribution between the two sets is similar and that no patient appears in both train and test sets
 
 #### Image Transformations
 
@@ -201,20 +199,22 @@ Where:
 
 ### 4.4 Training Configuration
 
-| Hyperparameter | Value |
-|----------------|-------|
-| Epochs | 15 |
-| Batch Size | 32 |
-| Optimizer | AdamW |
-| Learning Rate | 3×10⁻⁴ |
-| Weight Decay | 1×10⁻⁴ |
-| LR Scheduler | Cosine Annealing with Warm Restarts |
-| Early Stopping | Patience = 5 epochs |
+| Hyperparameter | DenseNet-121 | EfficientNet-B0 |
+|----------------|--------------|------------------|
+| Epochs | 15 | 30 |
+| Batch Size | 32 | 64 |
+| Optimizer | AdamW | AdamW |
+| Learning Rate | 3×10⁻⁴ | 5×10⁻⁴ |
+| Weight Decay | 1×10⁻⁴ | 1×10⁻⁴ |
+| LR Scheduler | Cosine Annealing with Warm Restarts | Cosine Annealing with Warm Restarts |
+| Early Stopping | Patience = 5 epochs | Patience = 5 epochs |
 
 #### Cross-Validation
 - **Strategy**: Group K-Fold (K=5, using first 3 folds)
 - **Grouping**: By Patient ID to prevent data leakage
-- **Best model selection**: Based on minimum validation loss per fold
+- **Best model selection**: 
+  - DenseNet-121: Based on minimum validation loss per fold
+  - EfficientNet-B0: Based on maximum validation AUC-ROC per fold
 
 #### Optimization Techniques
 - **Mixed Precision Training (FP16)**: 2x memory efficiency, faster training
