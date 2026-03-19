@@ -1,0 +1,6 @@
+data/
+data_sample/
+eda-full-DenseNet.ipynb
+eda-full-EfficientNet.ipynb
+eda-sample-ResNet.ipynb
+*.pt
